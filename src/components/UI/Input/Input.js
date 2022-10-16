@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import Button from "../Button/Button";
 
 import Card from "../Card/Card";
@@ -12,11 +12,24 @@ const Input = (props) => {
   const [validateEmail, setValidateEmail] = useState();
   const [validatePassword, setvalidatePassword] = useState();
 
+  // we use useEffect to make validate once for email and password depended on depensiences
+  useEffect(()=>{
+    let indentifier = setTimeout(()=>{
+      console.log("Checking Form Validity!") ;
+       setValideForm(
+        enteredEmail.includes("@") && enteredPassword.length > 6
+      );
+    } , 500)
+
+    // It's make a cleaner which before execution function almost once time 
+    return ()=>{
+      console.log("CLEANERUP");
+      clearTimeout(indentifier);
+    };
+  },[enteredEmail , enteredPassword])
+
   const changeEmailHandler = (event) => {
     setEnteredEmail(event.target.value);
-    setValideForm(
-      event.target.value.includes("@") && enteredPassword.length > 6
-    );
   };
 
   const validateEmailHandler = (event) => {
@@ -29,7 +42,7 @@ const Input = (props) => {
 
   const changePasswordHandler = (event) => {
     setEnteredPassword(event.target.value);
-    setValideForm(event.target.value.length > 6 && enteredEmail.includes("@"));
+    
   };
 
   const submitFormHandler = (event) => {
