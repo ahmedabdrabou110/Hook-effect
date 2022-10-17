@@ -41,8 +41,8 @@ function App() {
       isLoggedIn:login
     }}>
       <MainHeader  onClick={LogoutHandler} />
-      {login && <Input onLogin={loginHandler} />}
-      {!login && <Home />}
+      {login && <Input  onLogin={loginHandler} />}
+      {!login && <Home onLogout = {LogoutHandler}/>}
     </AuthContext.Provider>
   );
 }

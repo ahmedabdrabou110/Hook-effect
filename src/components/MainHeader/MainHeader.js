@@ -10,7 +10,7 @@ const MainHeader = (props) => {
           return (
           <header className={styles["main-header"]}>
             <h1>a typical page</h1>
-            {!ctx.login && <Navigator onClick={props.onClick} />}
+            {!ctx.isLoggedIn && <Navigator onClick={props.onClick} />}
           </header>
         );
         }
