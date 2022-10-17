@@ -1,4 +1,5 @@
 import React, { useState , useEffect } from "react";
+import AuthContext from "./components/auth/AuthContext";
 import Home from "./components/Home/Home";
 import MainHeader from "./components/MainHeader/MainHeader";
 import Input from "./components/UI/Input/Input";
@@ -36,11 +37,13 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <MainHeader login={login} onClick={LogoutHandler} />
+    <AuthContext.Provider value={{
+      isLoggedIn:login
+    }}>
+      <MainHeader  onClick={LogoutHandler} />
       {login && <Input onLogin={loginHandler} />}
       {!login && <Home />}
-    </div>
+    </AuthContext.Provider>
   );
 }
 
