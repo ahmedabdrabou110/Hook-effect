@@ -1,11 +1,11 @@
-import React, { useState , useEffect } from "react";
+import React, { useContext } from "react";
 import AuthContext from "./components/auth/AuthContext";
 import Home from "./components/Home/Home";
 import MainHeader from "./components/MainHeader/MainHeader";
 import Input from "./components/UI/Input/Input";
 
-function App() {
-  const [login, setLogin] = useState(true);
+const App = ()=> {
+  // const [login, setLogin] = useState(true);
 
   // we need to check if in local storage exit isLoggedIn if exist don't return login page 
 
@@ -19,31 +19,31 @@ function App() {
 
   // using useEffect.
 
-  useEffect(()=>{
-    const loggedUserInformations = localStorage.getItem("isLoggedIn");
-    if(loggedUserInformations === "1" ) setLogin(false);
-  } ,[])
+  // useEffect(()=>{
+  //   const loggedUserInformations = localStorage.getItem("isLoggedIn");
+  //   if(loggedUserInformations === "1" ) setLogin(false);
+  // } ,[])
 
-  const LogoutHandler = () => {
-    localStorage.removeItem("isLoggedIn")
-    setLogin(true);
-  };
+  // const LogoutHandler = () => {
+  //   localStorage.removeItem("isLoggedIn")
+  //   setLogin(true);
+  // };
 
-  const loginHandler = (enteredEmail, enteredPassword) => {
-    // make a local storage to save information of user to not need to login again
+  // const loginHandler = (enteredEmail, enteredPassword) => {
+  //   // make a local storage to save information of user to not need to login again
 
-    localStorage.setItem("isLoggedIn" , "1");
-    setLogin(false);
-  };
+  //   localStorage.setItem("isLoggedIn" , "1");
+  //   setLogin(false);
+  // };
+
+  const authCtx = useContext(AuthContext);
 
   return (
-    <AuthContext.Provider value={{
-      isLoggedIn:login
-    }}>
-      <MainHeader  onClick={LogoutHandler} />
-      {login && <Input  onLogin={loginHandler} />}
-      {!login && <Home onLogout = {LogoutHandler}/>}
-    </AuthContext.Provider>
+    <>
+      <MainHeader  />
+      {authCtx.isLoggedIn && <Input />}
+      {!authCtx.isLoggedIn && <Home />}
+    </>
   );
 }
 

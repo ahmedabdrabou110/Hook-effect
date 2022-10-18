@@ -1,4 +1,5 @@
-import React, { useState , useEffect  , useReducer} from "react";
+import React, { useState , useEffect  , useReducer, useContext} from "react";
+import AuthContext from "../../auth/AuthContext";
 import Button from "../Button/Button";
 
 import Card from "../Card/Card";
@@ -47,6 +48,7 @@ const Input = (props) => {
   const [emailState , dispatchEmail] = useReducer(emailReducer , {value:"" , isValid:null});
   const [passwordState , dispatchPassword] = useReducer(passwordReducer , {value :"" , isvalid:null})
 
+  const authCtx = useContext(AuthContext);
   // const [enteredEmail, setEnteredEmail] = useState("");
   // const [validateEmail, setValidateEmail] = useState();
   // const [enteredPassword, setEnteredPassword] = useState("");
@@ -93,7 +95,7 @@ const Input = (props) => {
     event.preventDefault();
     // props.onLogin(enteredEmail, enteredPassword);
     // console.log(enteredEmail, enteredPassword);
-    props.onLogin(emailState.value, passwordState.value);
+    authCtx.onLogin(emailState.value, passwordState.value);
     // setEnteredEmail("");
     dispatchEmail({type : "RESET_FORM" , val:""});
     dispatchPassword({type : "RESET_FORM" , val:""});
