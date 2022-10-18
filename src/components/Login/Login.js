@@ -1,4 +1,4 @@
-import React, { useState , useEffect  , useReducer, useContext} from "react";
+import React, { useState , useEffect  , useReducer, useContext , useRef} from "react";
 import AuthContext from "../auth/AuthContext";
 import Button from "../UI/Button/Button";
 import Card from "../UI/Card/Card";
@@ -20,9 +20,7 @@ const emailReducer = (state , action) =>{
     return {value : state.value , isvalid:state.value.includes("@")}
   }
 
-  if(action.type === "RESET_FORM") {
-    return {value : action.val , isvalid : null}
-  }
+  
   return {value : "" , isvalid : null}
 }
 
@@ -38,9 +36,7 @@ const passwordReducer =(state , action) =>{
     return {value : state.value , isvalid : state.value.length > 6}
   }
 
-  if(action.type === "RESET_FORM") {
-    return {value : action.val , isvalid : null}
-  }
+  
 
   return {value :"" , isvalid : null}
 }
@@ -50,19 +46,23 @@ const Login = (props) => {
   const [emailState , dispatchEmail] = useReducer(emailReducer , {value:"" , isValid:null});
   const [passwordState , dispatchPassword] = useReducer(passwordReducer , {value :"" , isvalid:null})
 
+  const emailRef = useRef();
+  const passwordRef = useRef();
+
   const authCtx = useContext(AuthContext);
   // const [enteredEmail, setEnteredEmail] = useState("");
   // const [validateEmail, setValidateEmail] = useState();
   // const [enteredPassword, setEnteredPassword] = useState("");
   // const [validatePassword, setvalidatePassword] = useState();
   const [valideForm, setValideForm] = useState(false);
-
+    const emailIsValid = emailState.isvalid ; 
+    const passwordIsValid = passwordState.isvalid ; 
   // we use useEffect to make validate once for email and password depended on depensiences
   useEffect(()=>{
-    let indentifier = setTimeout(()=>{
+    const indentifier = setTimeout(()=>{
       console.log("Checking Form Validity!") ;
        setValideForm(
-        emailState.isvalid && passwordState.isvalid 
+       emailIsValid&& passwordIsValid
       );
     } , 500)
 
@@ -71,7 +71,7 @@ const Login = (props) => {
       console.log("CLEANERUP");
       clearTimeout(indentifier);
     };
-  },[emailState.isvalid , passwordState.isvalid])
+  },[emailIsValid , passwordIsValid])
 
   const changeEmailHandler = (event) => {
     // setEnteredEmail(event.target.value);
@@ -97,12 +97,17 @@ const Login = (props) => {
     event.preventDefault();
     // props.onLogin(enteredEmail, enteredPassword);
     // console.log(enteredEmail, enteredPassword);
-    authCtx.onLogin(emailState.value, passwordState.value);
-    // setEnteredEmail("");
-    dispatchEmail({type : "RESET_FORM" , val:""});
-    dispatchPassword({type : "RESET_FORM" , val:""});
+    if(valideForm){
+        authCtx.onLogin(emailState.value, passwordState.value);
+    }else if (!emailState.isvalid){
+        event.preventDefault();
+        emailRef.current.focus();
+    }else{
+        passwordRef.current.focus();
+    }
+    
     // setEnteredPassword("");
-    console.log(props.login);
+    // console.log(props.login);
   };
 
   return (
@@ -121,7 +126,7 @@ const Login = (props) => {
             onBlur={validateEmailHandler}
           />
         </div> */}
-        <Input isvalid={emailState.isvalid} id="email" label= "E-Mail" type="email" value={emailState.value} onChange={changeEmailHandler} onBlur={validateEmailHandler}  />
+        <Input  ref={emailRef} isvalid={emailIsValid}  id="email" label= "E-Mail" type="email" value={emailState.value} onChange={changeEmailHandler} onBlur={validateEmailHandler}  />
         {/* <div
           className={`${styles.control} ${
             passwordState.isvalid === false ? styles.invalid : ""
@@ -135,9 +140,9 @@ const Login = (props) => {
             onBlur={validatePasswordHandler}
           />
         </div> */}
-        <Input isvalid={passwordState.isvalid} id="password" label="Password" type="password" value ={passwordState.value} onChange={changePasswordHandler} onBlur={validatePasswordHandler} />
+        <Input ref={passwordRef}  isvalid={passwordIsValid} id="password" label="Password" type="password" value ={passwordState.value} onChange={changePasswordHandler} onBlur={validatePasswordHandler} />
         <div className={styles.actions}>
-          <Button type="submit" disable={!valideForm}>
+          <Button type="submit" className={styles.btn}>
             Login
           </Button>
         </div>
