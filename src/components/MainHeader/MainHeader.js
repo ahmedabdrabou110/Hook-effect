@@ -1,23 +1,19 @@
-import React from "react";
+import React , {useContext} from "react";
 import AuthContext from "../auth/AuthContext";
 import styles from "./MainHeader.module.css";
 import Navigator from "./Navigator";
 const MainHeader = (props) => {
-  return (
-    <AuthContext.Consumer>
-      {
-        (ctx) => {
-          return (
-          <header className={styles["main-header"]}>
-            <h1>a typical page</h1>
-            {!ctx.isLoggedIn && <Navigator onClick={props.onClick} />}
-          </header>
-        );
-        }
-      }
+
+    const ctx = useContext(AuthContext);
     
-    </AuthContext.Consumer>
-  );
-};
+    return (
+      <header className={styles["main-header"]}>
+        <h1>a typical page</h1>
+        {!ctx.isLoggedIn && <Navigator onClick={props.onClick} />}
+      </header>
+    );
+  }
+      
+
 
 export default MainHeader;
