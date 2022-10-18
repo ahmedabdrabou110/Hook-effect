@@ -1,8 +1,9 @@
 import React, { useContext } from "react";
 import AuthContext from "./components/auth/AuthContext";
 import Home from "./components/Home/Home";
+import Login from "./components/Login/Login";
 import MainHeader from "./components/MainHeader/MainHeader";
-import Input from "./components/UI/Input/Input";
+
 
 const App = ()=> {
   // const [login, setLogin] = useState(true);
@@ -41,7 +42,7 @@ const App = ()=> {
   return (
     <>
       <MainHeader  />
-      {authCtx.isLoggedIn && <Input />}
+      {authCtx.isLoggedIn && <Login />}
       {!authCtx.isLoggedIn && <Home />}
     </>
   );
